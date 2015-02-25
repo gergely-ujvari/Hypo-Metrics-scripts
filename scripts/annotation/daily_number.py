@@ -32,7 +32,8 @@ while True:
     response = urllib2.urlopen(HYPO_SEARCH_API) # Add query to here
     data = json.load(response)
 
-    lines = ["system.annotation_number_1min %d %d" % (data['total'], today)]
+    timestamp = time.mktime(today.timetuple())
+    lines = ["system.annotation_number_1day %d %d" % (data['total'], timestamp)]
     # all lines must end in a newline
     message = '\n'.join(lines) + '\n'
     print "sending message\n"
