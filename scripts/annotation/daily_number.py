@@ -33,7 +33,7 @@ while True:
     data = json.load(response)
 
     timestamp = time.mktime(today.timetuple())
-    lines = ["system.annotation_number_1day %d %d" % (data['total'], timestamp)]
+    lines = ["daily.annotations.total %d %d" % (data['total'], timestamp)]
     # all lines must end in a newline
     message = '\n'.join(lines) + '\n'
     print "sending message\n"
