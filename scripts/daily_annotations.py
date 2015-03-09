@@ -15,8 +15,9 @@ def get_daily_data():
     offset = 0
     limit = 100
     total = 1
+    fetched = 1
 
-    while offset < total:
+    while offset < total and fetched > 0:
         query = '?offset=%d&limit=%d&before=%s&after=%s' % \
                 (offset, limit, tomorrow.isoformat(), today.isoformat())
         request_uri = HYPO_SEARCH_API + query

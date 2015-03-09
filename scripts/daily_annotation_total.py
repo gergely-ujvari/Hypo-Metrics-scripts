@@ -9,8 +9,6 @@ HYPO_SEARCH_API = 'https://api.hypothes.is/search?limit=0'
 
 # 60*60*24 (1day)
 delay = 86400
-if len(sys.argv) > 1:
-    delay = int(sys.argv[1])
 
 while True:
     response = urllib2.urlopen(HYPO_SEARCH_API)

@@ -1,3 +1,4 @@
+import base64
 from collections import defaultdict
 import time
 
@@ -8,7 +9,7 @@ from daily_annotations import get_daily_data
 delay = 86400
 
 
-def daily_annotation_total(annotations, timestamp):
+def daily_annotation_new(annotations, timestamp):
     return ['daily.annotations.new %d %d' % (len(annotations), timestamp)]
 
 
@@ -21,8 +22,9 @@ def daily_uris(annotations, timestamp):
         uris[uri] += 1
 
     for uri, total in uris.iteritems():
+        encoded = base64.b64encode(uri)
         metrics.append('daily.uri.%s %d %d' %
-                       (uri, total, timestamp))
+                       (encoded, total, timestamp))
 
     metrics.append("daily.uris.total %d %d" %
                    (len(uris.keys()), timestamp))
@@ -54,7 +56,7 @@ while True:
 
     annotations = get_daily_data()
 
-    lines.extend(daily_annotation_total(annotations, timestamp))
+    lines.extend(daily_annotation_new(annotations, timestamp))
     lines.extend(daily_uris(annotations, timestamp))
     lines.extend(daily_users(annotations, timestamp))
 
