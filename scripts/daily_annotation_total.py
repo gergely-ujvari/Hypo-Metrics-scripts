@@ -1,17 +1,18 @@
 import json
-import sys
 import time
 import urllib2
 
 from carbon import send
+import config
 
-HYPO_SEARCH_API = 'https://api.hypothes.is/search?limit=0'
-
-# 60*60*24 (1day)
-delay = 86400
+# 30 sec
+delay = 30
 
 while True:
-    response = urllib2.urlopen(HYPO_SEARCH_API)
+    uri = config.config[config.HYPO_SEARCH_API] + '?limit=0'
+    request = urllib2.Request(uri)
+    request.add_header('X-Annotator-Auth-Token', config.config[config.HYPO_AUTH_TOKEN])
+    response = urllib2.urlopen(request)
     data = json.load(response)
 
     timestamp = int(time.time())

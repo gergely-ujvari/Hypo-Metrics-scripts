@@ -1,12 +1,15 @@
 import base64
 from collections import defaultdict
+import datetime
 import time
 
 from carbon import send
 from daily_annotations import get_daily_data
 
-# 60*60*24 (1day)
-delay = 86400
+# 30 sec
+delay = 30
+yesterday = None
+yesterday_stamp = 0
 
 
 def daily_annotation_new(annotations, timestamp):
@@ -54,12 +57,27 @@ while True:
     lines = []
     timestamp = int(time.time())
 
-    annotations = get_daily_data()
+    today = datetime.date.today()
+    if not yesterday:
+        yesterday = today
+
+    if today != yesterday:
+        annotations = get_daily_data(yesterday)
+        lines.extend(daily_annotation_new(annotations, yesterday_stamp))
+        lines.extend(daily_uris(annotations, yesterday_stamp))
+        lines.extend(daily_users(annotations, yesterday_stamp))
+
+        yesterday = today
+        yesterday_stamp = timestamp
+
+    annotations = get_daily_data(today)
 
     lines.extend(daily_annotation_new(annotations, timestamp))
     lines.extend(daily_uris(annotations, timestamp))
     lines.extend(daily_users(annotations, timestamp))
 
     send(lines)
+
     time.sleep(delay)
+
 
